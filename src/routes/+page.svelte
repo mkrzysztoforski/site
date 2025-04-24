@@ -1,5 +1,6 @@
 <script lang="ts">
-  import '../style.css'
+  import '../style.css';
+  import { onMount } from 'svelte';
 
   let isDarkMode = false;
 
@@ -8,6 +9,33 @@
     const theme = isDarkMode ? 'dark' : 'light';
     document.documentElement.setAttribute('data-theme', theme);
   }
+
+  onMount(() => {
+    const script = document.createElement("script");
+    script.src = "https://cdn.cognigy.com/webchat/webchat-latest.js"; // bezpośredni, stabilny link (nie GitHub!)
+    script.async = true;
+
+    script.onload = () => {
+      setTimeout(() => {
+        // @ts-ignore OK!
+        window.initWebchat?.({
+          config: {
+            endpointUrl: "https://endpoint-trial.cognigy.ai/fa16fe01afce5f75f06cf01f7e8d4eabcc300d60803b29ae7503f25b64be53d1",
+            settings: {
+              enableUnreadMessageBadge: true,
+              startBehavior: "injection",
+              openOnInit: false
+            },
+            theme: {
+              primaryColor: "#1e1f1f"
+            }
+          }
+        });
+      }, 50); // zabezpieczenie przed wyścigiem ładowania
+    };
+
+    document.body.appendChild(script);
+  });
 </script>
 
 <div class="main">
@@ -16,7 +44,7 @@
     <span class="line"></span>  
   </div>
   <a class="links" target="_blank" href="https://www.linkedin.com/in/mkrzysztoforski/">(linkedin)</a>
-	<a class="links" target="_blank" href="https://github.com/mkrzysztoforski">(github)</a>
+  <a class="links" target="_blank" href="https://github.com/mkrzysztoforski">(github)</a>
 
   <button class='button' on:click={toggleDarkMode}>COLOR<sup>1</sup></button>
   <span class="span">1. Button for theme toggle.</span>
@@ -45,49 +73,48 @@
 
   .name {
     position: relative;
-		color: var(--text-color);
-		font-weight: 200;
+    color: var(--text-color);
+    font-weight: 200;
     font-size: 30px;
   }
 
   .wrap {
-		width: 280px;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		flex-flow: column;
-	}
+    width: 280px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-flow: column;
+  }
 
-	.main {
+  .main {
     background-color: var(--background-color);
     color: var(--text-color);
-		width: 100%;
-		height: 100vh;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		flex-flow: column;
-		font-family: 'Roboto', sans-serif;
-	}
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-flow: column;
+    font-family: 'Roboto', sans-serif;
+  }
 
-	.line {
-		display: block;
-		height: 1px;
-		width: 96px;
-		background-color: #7f7f88;
-		animation: animateLine 5s infinite;
-		margin: 0px 0 25px 0;
-	}
+  .line {
+    display: block;
+    height: 1px;
+    width: 96px;
+    background-color: #7f7f88;
+    animation: animateLine 5s infinite;
+    margin: 0px 0 25px 0;
+  }
 
-	.links {
-		color: var(--text-color);
-		margin-top: 15px;
-		letter-spacing: .5px;
-		font-weight: 300;
-		text-decoration: none;
+  .links {
+    color: var(--text-color);
+    margin-top: 15px;
+    letter-spacing: .5px;
+    font-weight: 300;
+    text-decoration: none;
     position: relative;
-
-	}
+  }
 
   .links:hover {
     color: var(--text-color);
@@ -110,23 +137,23 @@
     transform: scaleX(1);
   }
 
-	@keyframes animateLine {
-		0% {
-			width: 0;
-		}
-		25% {
-			width: 100%;
-			margin-left: 0;
-		}
-		75% {
-			width: 100%;
-			margin-left: 0;
-		}
-		100% {
-			margin-left: 100%;
-			width: 0;
-		}
-	}
+  @keyframes animateLine {
+    0% {
+      width: 0;
+    }
+    25% {
+      width: 100%;
+      margin-left: 0;
+    }
+    75% {
+      width: 100%;
+      margin-left: 0;
+    }
+    100% {
+      margin-left: 100%;
+      width: 0;
+    }
+  }
 
   :root {
     --background-color: #ded9d3;
@@ -137,5 +164,4 @@
     --background-color: #13151a;
     --text-color: #f8f8f8;
   }
-
 </style>
